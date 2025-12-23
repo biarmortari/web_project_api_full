@@ -96,7 +96,7 @@ class Api {
 const api = new Api({
   baseUrl: "https://web-project-api-full-backend.onrender.com",
   headers: {
-    authorization: "42415dc5-0398-42c7-ace6-6f8ebb09a884",
+    authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   },
 });

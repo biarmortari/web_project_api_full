@@ -37,7 +37,7 @@ export default [
       },
     },
     rules: {
-      "no-unused-vars": ["warn", { varsIgnorePattern: "^[A-Z]" }],
+      "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react-hooks/rules-of-hooks": "error",
