@@ -3,16 +3,30 @@ logs
 *.log
 npm-debug.log*
 
-# Diretório de dependências
-node_modules
-
-# Diretório de cache npm opcional
+# Dependências
+**/node_modules
 .npm
 
-# Arquivos do sistema e pastas de configurações IDE
+# IDEs e Sistema
 .DS_Store
 .idea
 .vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-#Variáveis de produção
-.env
+# Segurança: Variáveis de ambiente 
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# Build e Cache
+**/dist
+**/build
+.eslintcache
+
+# Arquivos temporários/pessoais
+*.txt
