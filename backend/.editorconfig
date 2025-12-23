@@ -1,0 +1,22 @@
+
+root = true
+
+[*]
+# Estilo de indentação
+indent_style = space
+
+# Tamanho da indentação em caracteres de espaçamento simples
+indent_size = 2
+
+# Caracteres de nova linha para usar
+end_of_line = lf
+
+# Codificação dos caracteres dos arquivos
+charset = utf-8
+
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+insert_final_newline = true
