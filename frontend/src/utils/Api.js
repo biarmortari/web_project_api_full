@@ -94,7 +94,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "https://around-api.pt-br.tripleten-services.com/v1",
+  baseUrl: "https://web-project-api-full-backend.onrender.com",
   headers: {
     authorization: "42415dc5-0398-42c7-ace6-6f8ebb09a884",
     "Content-Type": "application/json",

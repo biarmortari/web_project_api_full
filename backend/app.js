@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const { errors } = require("celebrate");
+const cors = require("cors");
 
 const authRoute = require("./routes/auth.route");
 const userRoute = require("./routes/users.route");
@@ -19,6 +20,9 @@ const {
 
 app.use(express.json());
 app.use(requestLogger);
+
+app.use(cors());
+app.options("*", cors());
 
 app.use(authRoute);
 app.use("/users", userRoute);
