@@ -44,6 +44,8 @@ function App() {
       return;
     }
 
+    Api.setToken(jwt);
+
     authApi
       .checkToken(jwt)
       .then((res) => {
@@ -153,6 +155,9 @@ function App() {
       .then((res) => {
         setCurrentUser((prevData) => ({ ...prevData, ["email"]: email }));
         setToken(res.token);
+
+        Api.setToken(res.token);
+
         setIsLoggedIn(true);
         navigate("/");
       })

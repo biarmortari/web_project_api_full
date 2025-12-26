@@ -1,104 +1,103 @@
 class Api {
-  constructor(options) {
-    this._baseUrl = options.baseUrl;
-    this._headers = options.headers;
+  constructor({ baseUrl }) {
+    this._baseUrl = baseUrl;
+    this._token = null;
   }
 
-  _checkResponse(res) {
-    if (res.ok) {
-      return res.json();
+  setToken(token) {
+    this._token = token;
+  }
+
+  _getHeaders() {
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this._token}`,
+    };
+  }
+
+  async _checkResponse(res) {
+    const contentType = res.headers.get("content-type");
+
+    let data;
+    if (contentType && contentType.includes("application/json")) {
+      data = await res.json();
+    } else {
+      data = await res.text();
     }
-    return Promise.reject(`Error: ${res.status}`);
+
+    if (res.ok) return data;
+
+    return Promise.reject({
+      status: res.status,
+      message: data?.message || data || "Erro desconhecido",
+    });
   }
 
-  _makeRequest(url, options) {
-    return fetch(url, options).then(this._checkResponse);
+  _makeRequest(url, options = {}) {
+    return fetch(url, {
+      ...options,
+      headers: this._getHeaders(),
+    }).then((res) => this._checkResponse(res));
   }
 
   getUserInfo() {
-    return this._makeRequest(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
-    });
+    return this._makeRequest(`${this._baseUrl}/users/me`);
   }
 
   getInitialCards() {
-    return this._makeRequest(`${this._baseUrl}/cards`, {
-      headers: this._headers,
-    });
+    return this._makeRequest(`${this._baseUrl}/cards`);
   }
 
   getAppInfo() {
     return Promise.all([this.getInitialCards(), this.getUserInfo()]);
   }
 
-  updateUserInfo(data) {
+  updateUserInfo({ name, about }) {
     return this._makeRequest(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
-      body: JSON.stringify({
-        name: data.name,
-        about: data.about,
-      }),
+      body: JSON.stringify({ name, about }),
     });
   }
 
-  addCard(data) {
+  addCard({ name, link }) {
     return this._makeRequest(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
-      body: JSON.stringify({
-        name: data.name,
-        link: data.link,
-      }),
+      body: JSON.stringify({ name, link }),
     });
   }
 
   likeCard(cardId) {
     return this._makeRequest(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
-      headers: this._headers,
     });
   }
 
   unlikeCard(cardId) {
     return this._makeRequest(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
-      headers: this._headers,
     });
   }
 
   updateLike(cardId, isLiked) {
-    if (isLiked) {
-      return this.likeCard(cardId);
-    } else {
-      return this.unlikeCard(cardId);
-    }
+    return isLiked ? this.likeCard(cardId) : this.unlikeCard(cardId);
   }
 
   deleteCard(cardId) {
     return this._makeRequest(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
     });
   }
 
-  updateAvatar(data) {
+  updateAvatar({ avatar }) {
     return this._makeRequest(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
-      body: JSON.stringify({
-        avatar: data.avatar,
-      }),
+      body: JSON.stringify({ avatar }),
     });
   }
 }
 
 const api = new Api({
   baseUrl: "https://web-project-api-full-backend.onrender.com",
-  headers: {
-    authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
 });
 
 export default api;
