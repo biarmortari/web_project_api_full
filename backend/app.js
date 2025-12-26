@@ -18,11 +18,18 @@ const {
   errorLogger,
 } = require("./middleware/logger.middleware");
 
+const corsOptions = {
+  origin: "https://web-project-api-full-frontend.vercel.app",
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 app.use(express.json());
 app.use(requestLogger);
-
-app.use(cors());
-app.options("*", cors());
 
 app.use(authRoute);
 app.use("/users", userRoute);
