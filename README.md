@@ -8,7 +8,7 @@ O projeto consiste em uma plataforma onde usuários podem se cadastrar, fazer lo
 
 ## 🌐 Deploy
 
-- **Frontend (Vercel):** <https://web-project-api-full-frontend.vercel.app/signin>
+- **Frontend (Vercel):** <https://web-project-api-full-frontend.vercel.app>
 - **Backend (Render):** <https://web-project-api-full-backend.onrender.com>
 
 ---
