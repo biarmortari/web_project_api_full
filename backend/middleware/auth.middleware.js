@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = process.env;
 
 module.exports = (req, res, next) => {
   if (req.method === "OPTIONS") {
@@ -7,7 +8,7 @@ module.exports = (req, res, next) => {
 
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith("Bearer")) {
+  if (!authorization || !authorization.startsWith("Bearer ")) {
     return res.status(401).send({ message: "Não autorizado" });
   }
 
@@ -15,7 +16,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token);
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (error) {
     return res.status(401).send({ message: "Não autorizado" });
   }
