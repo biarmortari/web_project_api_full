@@ -1,26 +1,30 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
 
 module.exports = (req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith("Bearer ")) {
-    return res.status(401).send({ message: "Não autorizado" });
+  if (!authorization) {
+    console.log("LOG: Header Authorization não chegou.");
+    return res.status(401).send({ message: "Não autorizado: Header ausente" });
   }
 
-  const token = authorization.replace("Bearer ", "");
-  let payload;
+  const token = authorization.replace(/Bearer\s+/i, "");
 
   try {
-    payload = jwt.verify(token, JWT_SECRET);
-  } catch (error) {
-    return res.status(401).send({ message: "Não autorizado" });
-  }
+    if (!process.env.JWT_SECRET) {
+      console.error(
+        "LOG: A variável JWT_SECRET não foi encontrada no process.env!"
+      );
+    }
 
-  req.user = payload;
-  next();
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = payload;
+    next();
+  } catch (err) {
+    console.log("LOG: Falha na verificação do Token:", err.message);
+    return res.status(401).send({
+      message: "Não autorizado",
+      error: err.message,
+    });
+  }
 };
