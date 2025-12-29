@@ -11,9 +11,9 @@ const auth = require("../middleware/auth.middleware");
 
 router.get("/", auth, getUsers);
 
-router.get("/:userId", getUserById);
-
 router.patch("/me", updateProfile);
+
+router.get("/:userId", getUserById);
 
 router.patch("/me/avatar", updateAvatar);
 

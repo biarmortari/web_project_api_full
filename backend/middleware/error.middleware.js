@@ -1,4 +1,5 @@
 module.exports = (err, req, res, next) => {
+  console.error(err);
   let { statusCode = 500, message = "Erro interno no servidor" } = err;
 
   if (err.name === "CastError") {
