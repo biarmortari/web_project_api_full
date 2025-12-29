@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, "hsaohjdos8y83h");
+    payload = jwt.verify(token);
   } catch (error) {
     return res.status(401).send({ message: "Não autorizado" });
   }
