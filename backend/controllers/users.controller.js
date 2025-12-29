@@ -66,11 +66,9 @@ module.exports.login = (req, res, next) => {
             .send({ message: "Senha incorreta ou e-mail incorretos" });
         }
 
-        const token = jwt.sign(
-          { _id: user._id },
-          process.env.JWT_SECRET || "hsaohjdos8y83h",
-          { expiresIn: "2h" }
-        );
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "2h",
+        });
 
         return res.status(200).send({ token });
       });
