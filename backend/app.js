@@ -19,7 +19,7 @@ const {
 } = require("./middleware/logger.middleware");
 
 const corsOptions = {
-  origin: "https://web-project-api-full-frontend.vercel.app",
+  origin: "*",
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: ["Content-Type", "Authorization"],
