@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = process.env;
 const NotFoundError = require("../errors/notFoundError");
 
 module.exports.getUsers = (req, res, next) => {
