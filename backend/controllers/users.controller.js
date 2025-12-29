@@ -3,26 +3,24 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const NotFoundError = require("../errors/notFoundError");
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) =>
-      res
-        .status(500)
-        .send({ message: `Erro ao buscar usuário: ${err.message}` })
-    );
+    .catch(next);
 };
 
-module.exports.getUserById = (req, res) => {
+module.exports.getUserInfo = (req, res, next) => {
+  User.findById(req.user._id)
+    .orFail(() => new NotFoundError("Usuário não encontrado"))
+    .then((user) => res.send({ data: user }))
+    .catch(next);
+};
+
+module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .select("-password")
-    .orFail()
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError("Usuário não encontrado");
-      }
-      res.send({ data: user });
-    })
+    .orFail(() => new NotFoundError("ID de usuário não encontrado"))
+    .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
@@ -31,7 +29,6 @@ module.exports.createUser = async (req, res, next) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({
       email,
       password: hashedPassword,
@@ -56,32 +53,32 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findOne({ email })
-    .select("password")
+    .select("+password")
     .then((user) => {
       if (!user) {
         throw new NotFoundError("Usuário não encontrado");
       }
 
-      bcrypt
-        .compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            return res
-              .status(401)
-              .send({ message: "Senha incorreta ou e-mail incorretos" });
-          }
+      return bcrypt.compare(password, user.password).then((matched) => {
+        if (!matched) {
+          return res
+            .status(401)
+            .send({ message: "Senha incorreta ou e-mail incorretos" });
+        }
 
-          const token = jwt.sign({ _id: user._id }, "hsaohjdos8y83h", {
-            expiresIn: "2h",
-          });
+        const token = jwt.sign(
+          { _id: user._id },
+          process.env.JWT_SECRET || "hsaohjdos8y83h",
+          { expiresIn: "2h" }
+        );
 
-          return res.status(200).send({ token });
-        })
-        .catch(next);
-    });
+        return res.status(200).send({ token });
+      });
+    })
+    .catch(next);
 };
 
-module.exports.updateProfile = (req, res) => {
+module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
@@ -89,12 +86,12 @@ module.exports.updateProfile = (req, res) => {
     { name, about },
     { new: true, runValidators: true }
   )
-    .orFail()
+    .orFail(() => new NotFoundError("Usuário não encontrado"))
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
@@ -102,7 +99,7 @@ module.exports.updateAvatar = (req, res) => {
     { avatar },
     { new: true, runValidators: true }
   )
-    .orFail()
+    .orFail(() => new NotFoundError("Usuário não encontrado"))
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
