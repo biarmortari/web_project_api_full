@@ -13,11 +13,6 @@ module.exports = (req, res, next) => {
   try {
     if (!process.env.JWT_SECRET) {
       console.error("LOG: JWT_SECRET não encontrado no process.env!");
-    } else {
-      console.log(
-        "LOG: JWT_SECRET usado no middleware:",
-        process.env.JWT_SECRET
-      );
     }
 
     const payload = jwt.verify(token, process.env.JWT_SECRET);
