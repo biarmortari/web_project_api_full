@@ -12,8 +12,11 @@ module.exports = (req, res, next) => {
 
   try {
     if (!process.env.JWT_SECRET) {
-      console.error(
-        "LOG: A variável JWT_SECRET não foi encontrada no process.env!"
+      console.error("LOG: JWT_SECRET não encontrado no process.env!");
+    } else {
+      console.log(
+        "LOG: JWT_SECRET usado no middleware:",
+        process.env.JWT_SECRET
       );
     }
 

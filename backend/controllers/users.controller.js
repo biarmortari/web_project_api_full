@@ -71,6 +71,9 @@ module.exports.login = (req, res, next) => {
           expiresIn: "2h",
         });
 
+        console.log("LOG: JWT_SECRET usado no login:", process.env.JWT_SECRET);
+        console.log("LOG: Token gerado:", token);
+
         return res.status(200).send({ token });
       });
     })
