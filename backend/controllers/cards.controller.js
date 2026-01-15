@@ -7,13 +7,14 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.createCard = (req, res) => {
-  console.log(req.user._id);
+  console.log(req.user);
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === "ValidationError") {
+        console.log(err);
         return res
           .status(400)
           .send({ message: "Dados inválidos para criação do cartão" });

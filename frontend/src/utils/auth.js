@@ -36,7 +36,7 @@ class AuthApi {
 }
 
 const authApi = new AuthApi({
-  baseUrl: "https://se-register-api.en.tripleten-services.com/v1",
+  baseUrl: "http://localhost:5000",
   headers: { "Content-Type": "application/json" },
 });
 

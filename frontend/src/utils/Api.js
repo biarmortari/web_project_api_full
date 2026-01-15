@@ -98,8 +98,12 @@ class Api {
   }
 }
 
-const api = new Api({
+/*const api = new Api({
   baseUrl: "https://web-project-api-full-backend.onrender.com",
+});*/
+
+const api = new Api({
+  baseUrl: "http://localhost:5000",
 });
 
 export default api;

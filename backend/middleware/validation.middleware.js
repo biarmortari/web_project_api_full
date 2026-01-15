@@ -9,9 +9,9 @@ const validateUrl = (value, helpers) => {
 
 module.exports.validateSignup = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
+    name: Joi.string(),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().custom(validateUrl),
   }),
