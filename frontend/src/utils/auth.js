@@ -36,8 +36,10 @@ class AuthApi {
 }
 
 const authApi = new AuthApi({
-  baseUrl: "http://localhost:5000",
-  headers: { "Content-Type": "application/json" },
+  baseUrl: import.meta.env.VITE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export default authApi;
