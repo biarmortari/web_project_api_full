@@ -22,7 +22,7 @@ import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import InfoTooltip from "../components/Main/components/Popup/InfoTooltip/InfoTooltip";
 
 import Popup from "../components/Main/components/Popup/Popup";
-
+import RemoveCard from "./Main/components/Popup/RemoveCard/RemoveCard";
 import authApi from "../utils/auth";
 
 import signupSuccess from "../images/signupSuccess.svg";
@@ -32,6 +32,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [popup, setPopup] = useState(null);
   const [cards, setCards] = useState([]);
+
+  const [cardToDelete, setCardToDelete] = useState(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -140,10 +142,20 @@ function App() {
     }
   }
 
+  async function handleCardDeleteRequest(card) {
+    setCardToDelete(card);
+    handleOpenPopup({
+      title: "Tem certeza?",
+      type: "confirmation",
+      children: <RemoveCard onConfirm={() => handleCardDelete(card)} />,
+    });
+  }
+
   async function handleCardDelete(card) {
     try {
       await Api.deleteCard(card._id);
       setCards((state) => state.filter((c) => c._id !== card._id));
+      handleClosePopup();
     } catch (error) {
       console.error(error);
     }
@@ -228,7 +240,7 @@ function App() {
           handleClosePopup,
           cards,
           handleCardLike,
-          handleCardDelete,
+          handleCardDelete: handleCardDeleteRequest,
           handleAddPlaceSubmit,
           popup,
           isLoggedIn,
@@ -246,6 +258,7 @@ function App() {
                     onOpenPopup={handleOpenPopup}
                     onClosePopup={handleClosePopup}
                     popup={popup}
+                    onDeleteCard={handleCardDeleteRequest}
                   />
                 </ProtectedRoute>
               }
