@@ -47,7 +47,7 @@ class Api {
   }
 
   getInitialCards() {
-    return this._makeRequest(`${this._baseUrl}/cards`).then((res) => res.data);
+    return this._makeRequest(`${this._baseUrl}/cards`);
   }
 
   getAppInfo() {

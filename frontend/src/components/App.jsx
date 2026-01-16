@@ -29,7 +29,12 @@ import signupSuccess from "../images/signupSuccess.svg";
 import signupFail from "../images/signupFail.svg";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState({});
+  /*const [currentUser, setCurrentUser] = useState({});*/
+  const [currentUser, setCurrentUser] = useState({
+    name: "",
+    about: "",
+    avatar: "",
+  });
   const [popup, setPopup] = useState(null);
   const [cards, setCards] = useState([]);
 
@@ -61,49 +66,52 @@ function App() {
       });
   }, []);
 
-  const getUserData = async () => {
-    try {
-      const userData = await Api.getUserInfo();
-      setCurrentUser((prev) => ({
-        ...prev,
-        ...userData,
-      }));
-    } catch (err) {
-      console.log("Erro ao buscar dados do usuário:", err);
-    }
-  };
-
   const getCardsData = async () => {
     try {
       const info = await Api.getAppInfo();
 
-      const cardsData = info[0];
-      const userData = info[1];
+      if (!Array.isArray(info) || info.length < 2) {
+        throw new Error("Retorno inválido do getAppInfo");
+      }
 
-      setCards(Array.isArray(cardsData) ? cardsData : cardsData?.data || []);
+      const [cardsResponse, userResponse] = info;
 
-      if (userData) {
+      const cards = Array.isArray(cardsResponse)
+        ? cardsResponse
+        : cardsResponse?.data;
+
+      if (Array.isArray(cards)) {
+        setCards(cards);
+      } else {
+        console.warn("Cards não atualizados — formato inválido", cardsResponse);
+      }
+
+      const user = userResponse?.data || userResponse;
+
+      if (user) {
         setCurrentUser((prev) => ({
           ...prev,
-          ...(userData.data || userData),
+          ...user,
         }));
       }
     } catch (err) {
-      console.log("Erro ao buscar dados iniciais:", err);
+      console.error("Erro ao buscar dados iniciais:", err);
     }
   };
 
   useEffect(() => {
     if (!isLoggedIn) return;
 
-    getUserData();
     getCardsData();
   }, [isLoggedIn]);
 
   const handleUpdateUser = async (data) => {
     try {
       const newData = await Api.updateUserInfo(data);
-      setCurrentUser(newData);
+      setCurrentUser((prev) => ({
+        ...prev,
+        ...newData,
+      }));
       handleClosePopup();
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
@@ -121,7 +129,10 @@ function App() {
   const handleUpdateAvatar = async (data) => {
     try {
       const newData = await Api.updateAvatar(data);
-      setCurrentUser(newData);
+      setCurrentUser((prev) => ({
+        ...prev,
+        ...newData,
+      }));
       handleClosePopup();
     } catch (error) {
       console.error("Erro ao atualizar avatar:", error);

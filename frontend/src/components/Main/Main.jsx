@@ -62,7 +62,7 @@ function Main() {
           <div className="profile__avatar-container">
             <img
               className="profile__avatar"
-              src={currentUser.avatar}
+              src={currentUser.avatar || null}
               alt="Foto de perfil"
             />
             <span className="profile__edit-icon"></span>
