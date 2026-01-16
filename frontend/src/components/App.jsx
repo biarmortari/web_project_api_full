@@ -73,10 +73,21 @@ function App() {
 
   const getCardsData = async () => {
     try {
-      const [cards] = await Api.getAppInfo();
-      setCards(cards);
+      const info = await Api.getAppInfo();
+
+      const cardsData = info[0];
+      const userData = info[1];
+
+      setCards(Array.isArray(cardsData) ? cardsData : cardsData?.data || []);
+
+      if (userData) {
+        setCurrentUser((prev) => ({
+          ...prev,
+          ...(userData.data || userData),
+        }));
+      }
     } catch (err) {
-      console.log("Erro ao buscar cards:", err);
+      console.log("Erro ao buscar dados iniciais:", err);
     }
   };
 
@@ -139,7 +150,6 @@ function App() {
   }
 
   async function handleAddPlaceSubmit(newCardData) {
-    console.log(newCardData);
     try {
       const newCard = await Api.addCard(newCardData);
       setCards((prev) => [newCard, ...prev]);

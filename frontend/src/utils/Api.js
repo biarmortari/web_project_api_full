@@ -47,7 +47,7 @@ class Api {
   }
 
   getInitialCards() {
-    return this._makeRequest(`${this._baseUrl}/cards`);
+    return this._makeRequest(`${this._baseUrl}/cards`).then((res) => res.data);
   }
 
   getAppInfo() {
@@ -97,10 +97,6 @@ class Api {
     });
   }
 }
-
-/*const api = new Api({
-  baseUrl: "https://web-project-api-full-backend.onrender.com",
-});*/
 
 const api = new Api({
   baseUrl: "http://localhost:5000",
