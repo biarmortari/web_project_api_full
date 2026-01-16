@@ -1,4 +1,17 @@
-require("dotenv").config();
+import express from "express";
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("OK");
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("Servidor no ar");
+});
+
+/*require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -53,4 +66,4 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`O app está executando na porta ${PORT}`);
 });
 
-module.exports = app;
+module.exports = app;*/
