@@ -1,17 +1,4 @@
-import express from "express";
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.get("/", (req, res) => {
-  res.send("OK");
-});
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Servidor no ar");
-});
-
-/*require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -58,7 +45,7 @@ app.use((req, res) => {
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Conectado ao MongoDB de Produção/Dev");
+    console.log("Conectado ao MongoDB");
   })
   .catch((err) => console.error("Erro ao conectar no banco:", err));
 
@@ -66,4 +53,4 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`O app está executando na porta ${PORT}`);
 });
 
-module.exports = app;*/
+module.exports = app;
